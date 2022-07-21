@@ -33,7 +33,7 @@ pipeline {
             steps{
                 sh '''
                 mvn clean verify sonar:sonar \
-                  -Dsonar.projectKey=eman-project \
+                  -Dsonar.projectKey=ci-maven \
                   -Dsonar.host.url=http://$SONAR_IP \
                   -Dsonar.login=$SONAR_TOKEN
                 '''
