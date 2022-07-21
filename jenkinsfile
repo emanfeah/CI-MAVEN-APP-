@@ -1,15 +1,8 @@
 pipeline {
     agent any
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_Access_KeyId')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_Secret_Key')
-        AWS_S3_BUCKET = "artifact-repo-12"
-        ARTIFACT_NAME = "hello-world.war"
-        AWS_EB_APP_NAME = "deploytheApp"
-        AWS_EB_APP_VERSION = "${BUILD_ID}"
-        AWS_EB_ENVIRONMENT = "Deploytheapp-env"
         SONAR_IP = "54.226.50.200"
-        SONAR_TOKEN ="sqp_fad64804dadddcb4fdad409580fe260867eb55cd"
+        SONAR_TOKEN ="sqp_bfec2c231d17576aaf758683e748edea68a83d9d"
        
        
     }
@@ -57,18 +50,6 @@ pipeline {
                 }
             }
         }
-         stage('Publish artifacts to S3 Bucket') {
-            steps {
-                sh "aws configure set region us-east-1"
-                sh "aws s3 cp ./target/**.war s3://$AWS_S3_BUCKET/$ARTIFACT_NAME"
-            }
-         }
-         stage('Deploy') {
-            steps {
-                sh 'aws elasticbeanstalk create-application-version --application-name $AWS_EB_APP_NAME --version-label $AWS_EB_APP_VERSION --source-bundle S3Bucket=$AWS_S3_BUCKET,S3Key=$ARTIFACT_NAME'
-                sh 'aws elasticbeanstalk update-environment --application-name $AWS_EB_APP_NAME --environment-name $AWS_EB_ENVIRONMENT --version-label $AWS_EB_APP_VERSION'
-            }
-         }
         
 
     }
